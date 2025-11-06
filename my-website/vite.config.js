@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   base: '/p92',
   build: {
-    outDir: 'docs'
+    outDir: '../docs'
   }
 })
