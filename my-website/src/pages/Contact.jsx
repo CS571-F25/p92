@@ -1,4 +1,5 @@
 import '../App.css'
+import ContactCard from '../components/ContactCard/ContactCard'
 
 function Contact() {
   return (
@@ -12,30 +13,33 @@ function Contact() {
         <div className="contact-info">
           <h2>Get in Touch</h2>
           <div className="contact-details">
-            <div className="contact-method">
-              <h3>📞 Phone</h3>
-              <p>(555) 123-FLOWER</p>
-              <p>(555) 123-3569</p>
-            </div>
+            <ContactCard 
+              icon="📞" 
+              title="Phone" 
+              lines={["(555) 123-FLOWER", "(555) 123-3569"]} 
+            />
             
-            <div className="contact-method">
-              <h3>📧 Email</h3>
-              <p>info@maimaiflowers.com</p>
-              <p>orders@maimaiflowers.com</p>
-            </div>
+            <ContactCard 
+              icon="📧" 
+              title="Email" 
+              lines={["info@maimaiflowers.com", "orders@maimaiflowers.com"]} 
+            />
             
-            <div className="contact-method">
-              <h3>📍 Address</h3>
-              <p>123 Flower Street</p>
-              <p>Garden City, State 12345</p>
-            </div>
+            <ContactCard 
+              icon="📍" 
+              title="Address" 
+              lines={["123 Flower Street", "Garden City, State 12345"]} 
+            />
             
-            <div className="contact-method">
-              <h3>🕒 Hours</h3>
-              <p>Monday - Friday: 8:00 AM - 7:00 PM</p>
-              <p>Saturday: 9:00 AM - 6:00 PM</p>
-              <p>Sunday: 10:00 AM - 4:00 PM</p>
-            </div>
+            <ContactCard 
+              icon="🕒" 
+              title="Hours" 
+              lines={[
+                "Monday - Friday: 8:00 AM - 7:00 PM",
+                "Saturday: 9:00 AM - 6:00 PM", 
+                "Sunday: 10:00 AM - 4:00 PM"
+              ]} 
+            />
           </div>
         </div>
         
