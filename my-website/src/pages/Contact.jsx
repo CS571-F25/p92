@@ -12,12 +12,21 @@ function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    // Get form data
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    console.log('Form submitted:', data);
+    
     // Show success message
     setSubmitted(true);
     // Reset form
     e.target.reset();
     // Hide success message after 5 seconds
     setTimeout(() => setSubmitted(false), 5000);
+    
+    return false;
   };
 
   return (
@@ -78,7 +87,7 @@ function Contact() {
           </div>
         )}
         
-        <form className="contact-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center', maxWidth: '600px', margin: '0 auto' }}>
+        <form className="contact-form" onSubmit={handleSubmit} method="post" action="#" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center', maxWidth: '600px', margin: '0 auto' }}>
           <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
             <Label htmlFor="name" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Name</Label>
             <Input 
