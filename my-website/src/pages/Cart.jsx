@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import CartItemCard from '../components/CartItemCard/CartItemCard';
 import CheckoutCard from '../components/CheckoutCard/CheckoutCard';
 import { Button } from "@/components/ui/button";
@@ -281,7 +282,7 @@ function Cart() {
       let paymentResult = null;
       if (paymentMethodId && paymentMethodId !== 'demo_payment_method') {
         const token = isAuthenticated ? getToken() : null;
-        const paymentResponse = await fetch('http://localhost:5000/api/payment/charge', {
+        const paymentResponse = await fetch(`${API_BASE_URL}/api/payment/charge`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -353,7 +354,7 @@ function Cart() {
         }
       }
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(orderData)

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -36,7 +37,7 @@ function MyOrders() {
         const token = getToken();
         console.log('Fetching orders with token:', token ? 'Token exists' : 'No token');
         
-        const response = await fetch('http://localhost:5000/api/orders', {
+        const response = await fetch(`${API_BASE_URL}/api/orders`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
