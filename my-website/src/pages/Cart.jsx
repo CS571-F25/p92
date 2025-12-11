@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { API_BASE_URL } from '../config/api';
+import { supabase } from '../config/supabase';
 import CartItemCard from '../components/CartItemCard/CartItemCard';
 import CheckoutCard from '../components/CheckoutCard/CheckoutCard';
 import { Button } from "@/components/ui/button";
@@ -278,38 +278,10 @@ function Cart() {
       const deliveryFee = 10.00;
       const total = totalPrice + deliveryFee;
 
-      // Step 1: Process payment through backend
-      let paymentResult = null;
-      if (paymentMethodId && paymentMethodId !== 'demo_payment_method') {
-        const token = isAuthenticated ? getToken() : null;
-        const paymentResponse = await fetch(`${API_BASE_URL}/api/payment/charge`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({
-            paymentMethodId,
-            amount: total,
-            currency: 'usd',
-            description: `MaiMai Flowers Order - ${items.length} item(s)`,
-            metadata: {
-              customerEmail: shippingInfo.email,
-              customerName: shippingInfo.name
-            }
-          })
-        });
+      // Demo mode - no actual payment processing
+      console.log('Demo payment mode - Order being placed');
 
-        if (!paymentResponse.ok) {
-          const errorData = await paymentResponse.json();
-          throw new Error(errorData.error || 'Payment failed');
-        }
-
-        paymentResult = await paymentResponse.json();
-        console.log('Payment processed:', paymentResult);
-      }
-
-      // Step 2: Prepare order data with payment info
+      // Prepare order data
       const orderData = {
         items: items.filter(item => item.quantity > 0).map(item => ({
           productId: item.id,
@@ -341,31 +313,27 @@ function Cart() {
         }
       };
 
-      // Prepare headers
-      const headers = {
-        'Content-Type': 'application/json'
-      };
+      // Create order in Supabase
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([
+          {
+            user_id: isAuthenticated ? user.id : null,
+            items: orderData.items,
+            subtotal: orderData.subtotal,
+            delivery_fee: orderData.deliveryFee,
+            total: orderData.total,
+            status: 'pending',
+            customer_info: orderData.customerInfo,
+            payment_info: orderData.paymentInfo
+          }
+        ])
+        .select();
 
-      // Add auth token if user is logged in
-      if (isAuthenticated) {
-        const token = getToken();
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
+      if (error) {
+        throw new Error(error.message || 'Failed to create order');
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/orders`, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(orderData)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create order');
-      }
-
-      const data = await response.json();
       console.log('Order created:', data);
 
       setShowCheckoutModal(false);

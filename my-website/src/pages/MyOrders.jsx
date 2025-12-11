@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { API_BASE_URL } from '../config/api';
+import { supabase } from '../config/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -11,7 +11,7 @@ function MyOrders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedOrders, setExpandedOrders] = useState(new Set());
-  const { getToken, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const toggleOrderExpand = (orderId) => {
     setExpandedOrders(prev => {
@@ -34,26 +34,20 @@ function MyOrders() {
 
     const fetchOrders = async () => {
       try {
-        const token = getToken();
-        console.log('Fetching orders with token:', token ? 'Token exists' : 'No token');
+        console.log('Fetching orders for user:', user.id);
         
-        const response = await fetch(`${API_BASE_URL}/api/orders`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-        console.log('Response status:', response.status);
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('Error response:', errorData);
-          throw new Error(errorData.error || 'Failed to fetch orders');
+        if (error) {
+          throw error;
         }
 
-        const data = await response.json();
         console.log('Orders received:', data);
-        setOrders(data);
+        setOrders(data || []);
       } catch (err) {
         console.error('Fetch error:', err);
         setError(err.message);

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { API_BASE_URL } from '../config/api';
+import { supabase } from '../config/supabase';
 
 const AuthContext = createContext();
 
@@ -16,56 +16,74 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Check if user is logged in on mount
+  // Check if user is logged in on mount and listen for auth changes
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    }
-    setLoading(false);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email,
+          username: session.user.user_metadata?.username || session.user.email.split('@')[0],
+          role: session.user.user_metadata?.role || 'customer'
+        });
+      }
+      setLoading(false);
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email,
+          username: session.user.user_metadata?.username || session.user.email.split('@')[0],
+          role: session.user.user_metadata?.role || 'customer'
+        });
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Login function
+  // Login function (Supabase uses email, not username)
   const login = async (username, password) => {
     try {
       setError(null);
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
+      
+      // Try to login with email (if username looks like email)
+      // Otherwise, we'll need to look up the email from username
+      let email = username;
+      
+      // If username doesn't contain @, look up the user's email from profiles table
+      if (!username.includes('@')) {
+        const { data: profile, error: lookupError } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('username', username)
+          .single();
+        
+        if (lookupError || !profile) {
+          throw new Error('Incorrect username or password');
+        }
+        email = profile.email;
       }
 
-      // Save token and user data
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({
-        id: data._id || data.id,
-        username: data.username,
-        email: data.email,
-        role: data.role
-      }));
-
-      setUser({
-        id: data._id || data.id,
-        username: data.username,
-        email: data.email,
-        role: data.role
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
+
+      if (signInError) {
+        throw new Error('Incorrect username or password');
+      }
 
       return { success: true };
     } catch (err) {
-      const errorMessage = err.message === 'Failed to fetch' 
-        ? 'Incorrect username or password' 
-        : err.message;
+      const errorMessage = err.message;
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -75,35 +93,25 @@ export const AuthProvider = ({ children }) => {
   const register = async (username, email, password) => {
     try {
       setError(null);
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
+
+      // Sign up with Supabase Auth (trigger will create profile automatically)
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            username: username,
+            role: 'customer'
+          }
+        }
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || data.errors?.[0]?.msg || 'Registration failed');
+      if (signUpError) {
+        throw new Error(signUpError.message);
       }
 
-      // Save token and user data
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify({
-        id: data._id || data.id,
-        username: data.username,
-        email: data.email,
-        role: data.role
-      }));
-
-      setUser({
-        id: data._id || data.id,
-        username: data.username,
-        email: data.email,
-        role: data.role
-      });
+      // Profile will be created automatically by database trigger
+      console.log('User registered successfully:', data);
 
       return { success: true };
     } catch (err) {
@@ -113,9 +121,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Logout function
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setError(null);
   };
@@ -125,9 +132,10 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   };
 
-  // Get auth token
-  const getToken = () => {
-    return localStorage.getItem('token');
+  // Get auth token (for Supabase, returns the session token)
+  const getToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || null;
   };
 
   const value = {
