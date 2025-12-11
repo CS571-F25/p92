@@ -66,9 +66,15 @@ export const AuthProvider = ({ children }) => {
           .eq('username', username)
           .single();
         
-        if (lookupError || !profile) {
-          throw new Error('Incorrect username or password');
+        if (lookupError) {
+          console.error('Profile lookup error:', lookupError);
+          throw new Error('Username not found. Please use your email address to login.');
         }
+        
+        if (!profile) {
+          throw new Error('Username not found. Please use your email address to login.');
+        }
+        
         email = profile.email;
       }
 
@@ -78,7 +84,14 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (signInError) {
-        throw new Error('Incorrect username or password');
+        console.error('Sign in error:', signInError);
+        
+        // Check if email needs to be confirmed
+        if (signInError.message.includes('Email not confirmed')) {
+          throw new Error('Please confirm your email before logging in. Check your inbox.');
+        }
+        
+        throw new Error('Incorrect email or password');
       }
 
       return { success: true };
