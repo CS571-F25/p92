@@ -255,9 +255,9 @@ function MyOrders() {
                     borderRadius: '16px',
                     border: '1px solid #e0e0e0'
                   }}>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', color: '#203d2b' }}>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', color: '#203d2b' }}>
                       Order Items
-                    </h3>
+                    </h2>
                     
                     {items.length > 0 ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -286,9 +286,9 @@ function MyOrders() {
                               />
                             )}
                             <div style={{ flex: 1 }}>
-                              <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.25rem', color: '#203d2b' }}>
+                              <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.25rem', color: '#203d2b' }}>
                                 {item.title || 'Product'}
-                              </h4>
+                              </h3>
                               <p style={{ fontSize: '0.9rem', color: '#666' }}>
                                 Quantity: {item.quantity || 1}
                               </p>
