@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import CartItemCard from '../components/CartItemCard/CartItemCard';
@@ -422,7 +422,7 @@ function Cart() {
         <div className="empty-cart">
           <p>Your cart is empty</p>
           <p>Browse our beautiful flower arrangements and add some to your cart!</p>
-          <a href="/p92/order" className="shop-now-btn">Shop Now</a>
+          <Link to="/order" className="shop-now-btn">Shop Now</Link>
         </div>
       </div>
     );
