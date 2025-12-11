@@ -49,7 +49,7 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0 0 0.75rem 0;
-  text-align: left;
+  text-align: center;
 }
 
 .flower-card-description {
@@ -58,25 +58,27 @@
   line-height: 1.5;
   margin: 0 0 1rem 0;
   flex-grow: 1;
-  text-align: left;
+  text-align: center;
 }
 
 .flower-card-footer {
+  padding: 0 1.5rem 1.5rem 1.5rem;
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  margin-top: auto;
   gap: 1rem;
 }
 
 .flower-card-price {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #203d2b;
   margin: 0;
 }
 
-.flower-card-button {
+.flower-card-button,
+.add-to-cart-btn {
   background-color: #203d2b;
   color: white;
   border: none;
@@ -88,12 +90,14 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.flower-card-button:hover {
+.flower-card-button:hover,
+.add-to-cart-btn:hover {
   background-color: #2d5a3d;
   transform: translateY(-1px);
 }
 
-.flower-card-button:active {
+.flower-card-button:active,
+.add-to-cart-btn:active {
   transform: translateY(0);
 }
 

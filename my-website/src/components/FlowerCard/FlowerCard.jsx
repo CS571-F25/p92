@@ -1,31 +1,32 @@
-import './FlowerCard.css';
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useCart } from '../../context/CartContext';
+import './FlowerCard.css';
 
 function FlowerCard({ id, title, price, description, image, altText }) {
   const { addItem } = useCart();
   return (
-    <div className="flower-card">
+    <Card className="flower-card">
       <div className="flower-card-image">
         <img 
           src={image || '/api/placeholder/300/200'} 
           alt={altText || title} 
-          className="flower-card-img"
         />
       </div>
-      <div className="flower-card-content">
+      <CardContent className="flower-card-content">
         <h3 className="flower-card-title">{title}</h3>
         {description && <p className="flower-card-description">{description}</p>}
-        <div className="flower-card-footer">
-          <p className="flower-card-price">${price}</p>
-          <button 
-            className="flower-card-button"
-            onClick={() => addItem({ id, title, price, description, image, altText })}
-          >
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="flower-card-footer">
+        <p className="flower-card-price">${price}</p>
+        <Button 
+          className="add-to-cart-btn"
+          onClick={() => addItem({ id, title, price, description, image, altText })}
+        >
+          Add to Cart
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 

@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
   const { totalItems } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
+  };
 
   return (
     <nav className="navbar">
@@ -20,10 +28,24 @@ function Navbar() {
             <Link to="/order" className="navbar-link">Order</Link>
           </li>
           <li className="navbar-item">
-            <Link to="/about" className="navbar-link">About</Link>
+            <Link to="/contact" className="navbar-link">Contact Us</Link>
           </li>
           <li className="navbar-item">
-            <Link to="/contact" className="navbar-link">Contact Us</Link>
+            {isAuthenticated ? (
+              <button 
+                onClick={handleLogout}
+                className="navbar-link"
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  cursor: 'pointer'
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" className="navbar-link">Login</Link>
+            )}
           </li>
           <li className="navbar-item">
             <Link to="/cart" className="navbar-link cart-link">

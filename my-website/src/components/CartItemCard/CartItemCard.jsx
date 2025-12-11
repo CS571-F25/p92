@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import './CartItemCard.css';
 
 function CartItemCard({ item, onQuantityChange, onRemove }) {
@@ -10,7 +12,7 @@ function CartItemCard({ item, onQuantityChange, onRemove }) {
   };
 
   return (
-    <div className={`cart-item-card ${item.quantity === 0 ? 'zero-quantity' : ''}`}>
+    <Card className={`cart-item-card ${item.quantity === 0 ? 'zero-quantity' : ''}`}>
       <div className="cart-item-image">
         <img 
           src={item.image || '/api/placeholder/100/100'} 
@@ -25,35 +27,35 @@ function CartItemCard({ item, onQuantityChange, onRemove }) {
       
       <div className="cart-item-controls">
         <div className="quantity-controls">
-          <button 
+          <Button 
             className="quantity-btn"
             onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={item.quantity === 0}
           >
             -
-          </button>
+          </Button>
           <span className="quantity-display">{item.quantity}</span>
-          <button 
+          <Button 
             className="quantity-btn"
             onClick={() => handleQuantityChange(item.quantity + 1)}
           >
             +
-          </button>
+          </Button>
         </div>
         
         <div className="cart-item-price">
           ${(parseFloat(item.price) * item.quantity).toFixed(2)}
         </div>
         
-        <button 
+        <Button 
           className="remove-btn"
           onClick={() => onRemove(item.id)}
           title="Remove item"
         >
           ×
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }
 

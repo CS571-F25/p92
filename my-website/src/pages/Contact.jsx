@@ -1,5 +1,10 @@
 import '../App.css'
 import ContactCard from '../components/ContactCard/ContactCard'
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectSeparator } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 function Contact() {
   return (
@@ -44,39 +49,148 @@ function Contact() {
         </div>
         
         <h2>Send Us a Message</h2>
-        <form className="contact-form">
-          <div className="form-group">
-            <label htmlFor="name">Name:</label>
-            <input type="text" id="name" name="name" required />
+        <form className="contact-form" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center', maxWidth: '600px', margin: '0 auto' }}>
+          <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
+            <Label htmlFor="name" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Name</Label>
+            <Input 
+              type="text" 
+              id="name" 
+              name="name" 
+              required 
+              style={{
+                fontSize: '1.1rem',
+                padding: '0.85rem',
+                height: 'auto',
+                border: '2px solid #ccc',
+                width: '100%',
+                boxSizing: 'border-box',
+                borderRadius: '32px',
+                backgroundColor: '#f8f9fa',
+                color: '#000'
+              }}
+            />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email" required />
+          <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
+            <Label htmlFor="email" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Email</Label>
+            <Input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              style={{
+                fontSize: '1.1rem',
+                padding: '0.85rem',
+                height: 'auto',
+                border: '2px solid #ccc',
+                width: '100%',
+                boxSizing: 'border-box',
+                borderRadius: '32px',
+                backgroundColor: '#f8f9fa',
+                color: '#000'
+              }}
+            />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone" />
+          <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
+            <Label htmlFor="phone" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Phone</Label>
+            <Input 
+              type="tel" 
+              id="phone" 
+              name="phone" 
+              style={{
+                fontSize: '1.1rem',
+                padding: '0.85rem',
+                height: 'auto',
+                border: '2px solid #ccc',
+                width: '100%',
+                boxSizing: 'border-box',
+                borderRadius: '32px',
+                backgroundColor: '#f8f9fa',
+                color: '#000'
+              }}
+            />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="subject">Subject:</label>
-            <select id="subject" name="subject">
-              <option value="general">General Inquiry</option>
-              <option value="order">Place an Order</option>
-              <option value="custom">Custom Arrangement</option>
-              <option value="wedding">Wedding Flowers</option>
-              <option value="delivery">Delivery Question</option>
-            </select>
+          <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
+            <Label htmlFor="subject" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Subject</Label>
+            <Select>
+              <SelectTrigger 
+                style={{
+                  fontSize: '1.1rem',
+                  padding: '0.85rem',
+                  height: 'auto',
+                  border: '2px solid #ccc',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  borderRadius: '32px',
+                  backgroundColor: '#f8f9fa',
+                  color: '#000'
+                }}
+              >
+                <SelectValue placeholder="Select a subject" />
+              </SelectTrigger>
+              <SelectContent
+                style={{
+                  backgroundColor: '#fff',
+                  border: '2px solid #ccc',
+                  borderRadius: '8px',
+                  padding: '0.5rem',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  width: 'var(--radix-select-trigger-width)',
+                  maxWidth: '500px'
+                }}
+              >
+                <SelectItem value="general">General Inquiry</SelectItem>
+                <SelectSeparator style={{ backgroundColor: '#e0e0e0', height: '1px', margin: '0.25rem 0' }} />
+                <SelectItem value="order">Place an Order</SelectItem>
+                <SelectSeparator style={{ backgroundColor: '#e0e0e0', height: '1px', margin: '0.25rem 0' }} />
+                <SelectItem value="custom">Custom Arrangement</SelectItem>
+                <SelectSeparator style={{ backgroundColor: '#e0e0e0', height: '1px', margin: '0.25rem 0' }} />
+                <SelectItem value="wedding">Wedding Flowers</SelectItem>
+                <SelectSeparator style={{ backgroundColor: '#e0e0e0', height: '1px', margin: '0.25rem 0' }} />
+                <SelectItem value="delivery">Delivery Question</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           
-          <div className="form-group">
-            <label htmlFor="message">Message:</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
+          <div style={{ width: '100%', maxWidth: '500px', boxSizing: 'border-box' }}>
+            <Label htmlFor="message" style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', display: 'block' }}>Message</Label>
+            <Textarea 
+              id="message" 
+              name="message" 
+              rows="5" 
+              required
+              style={{
+                fontSize: '1.1rem',
+                padding: '0.85rem',
+                border: '2px solid #ccc',
+                width: '100%',
+                boxSizing: 'border-box',
+                borderRadius: '16px',
+                backgroundColor: '#f8f9fa',
+                color: '#000',
+                resize: 'vertical'
+              }}
+            />
           </div>
           
-          <button type="submit">Send Message</button>
+          <Button 
+            type="submit"
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              backgroundColor: '#203d2b',
+              color: 'white',
+              fontSize: '1.1rem',
+              padding: '0.85rem',
+              borderRadius: '32px'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2d5a3d'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#203d2b'}
+          >
+            Send Message
+          </Button>
         </form>
         
         <p>

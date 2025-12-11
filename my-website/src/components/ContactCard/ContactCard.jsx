@@ -1,18 +1,21 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import './ContactCard.css';
 
 function ContactCard({ icon, title, lines }) {
   return (
-    <div className="contact-card">
-      <h3 className="contact-card-title">
-        <span className="contact-icon">{icon}</span>
-        {title}
-      </h3>
-      <div className="contact-card-content">
+    <Card className="contact-card">
+      <CardHeader>
+        <CardTitle className="contact-card-title">
+          <span className="contact-icon">{icon}</span>
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="contact-card-content">
         {lines.map((line, index) => (
           <p key={index} className="contact-line">{line}</p>
         ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 

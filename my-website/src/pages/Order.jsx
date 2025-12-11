@@ -1,5 +1,8 @@
 import '../App.css'
 import FlowerCard from '../components/FlowerCard/FlowerCard'
+import { Button } from "@/components/ui/button"
+import { Link } from 'react-router-dom'
+import { Package } from 'lucide-react'
 
 function Order() {
   // Flower arrangement data
@@ -40,7 +43,28 @@ function Order() {
 
   return (
     <div className="app-content">
-        <h1>Place Your Order</h1>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '1rem', position: 'relative' }}>
+          <h1 style={{ margin: 0 }}>Place Your Order</h1>
+          <Link to="/my-orders" style={{ position: 'absolute', right: 0 }}>
+            <Button 
+              style={{
+                backgroundColor: '#203d2b',
+                color: 'white',
+                fontSize: '1rem',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2d5a3d'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#203d2b'}
+            >
+              <Package className="w-5 h-5" />
+              My Orders
+            </Button>
+          </Link>
+        </div>
         <p>
           Ready to brighten your day or surprise someone special? Browse our selection of beautiful floral arrangements and place your order today.
         </p>
